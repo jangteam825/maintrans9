@@ -1,0 +1,26 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>당산 시각화</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; padding: 2rem; }
+    .line { display: flex; justify-content: space-between; align-items: center; max-width: 600px; margin: auto; }
+    .station { width: 100px; height: 40px; background: #eee; border-radius: 20px; line-height: 40px; }
+    .train { width: 30px; height: 30px; background: red; border-radius: 50%; position: absolute; top: 80px; transition: all 1s linear; }
+  </style>
+</head>
+<body>
+  <h1>🚇 당산 시각화</h1>
+  <div class="line">
+    <div class="station">개화</div>
+    <div class="station">김포공항</div>
+    <div class="station">당산</div>
+    <div class="station">보훈병원</div>
+  </div>
+  <div id="train" class="train"></div>
+  <script type="module" src="/src/App.jsx"></script>
+</body>
+</html>
