@@ -69,12 +69,22 @@
 
     .normal-line {
       position: absolute;
-      top: 50%; /* 역사 중앙 기준으로 */
+      top: 70%; /* 역사 이름 아래쪽으로 이동 */
       left: 0;
-      height: 0;
       width: 100%;
-      border-top: 2px solid #333; /* 동그라미끼리 연결용 선 */
+      height: 2px;
+      background-color: #FFCC00; /* 일반: 겨자색 */
       z-index: 0;
+    }
+
+    .base-line {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: #333; /* 기본 검정 라인 */
+      z-index: -1;
     }
 
     .line-container {
@@ -128,7 +138,7 @@
       <div class="legend-line" style="background-color: #FF3B30;"></div> 급행
     </div>
     <div class="legend-item">
-      <div class="legend-line" style="background-color: #333;"></div> 일반
+      <div class="legend-line" style="background-color: #FFCC00;"></div> 일반
     </div>
   </div>
 
