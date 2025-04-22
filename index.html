@@ -13,17 +13,20 @@
       font-family: Arial, sans-serif;
       overflow-x: auto;
     }
+
     .lines-wrapper {
       display: flex;
       flex-direction: column;
-      gap: 80px;
+      gap: 100px; /* 상선 하선 간격 더 벌림 */
     }
+
     .line-section {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 20px;
+      gap: 30px; /* 제목과 노선 간격 더 벌림 */
     }
+
     .line-title {
       font-size: 20px;
       font-weight: bold;
@@ -32,6 +35,7 @@
       border-radius: 12px;
       color: #333;
     }
+
     .legend {
       display: flex;
       gap: 20px;
@@ -40,41 +44,46 @@
       font-size: 14px;
       align-items: center;
     }
+
     .legend-item {
       display: flex;
       align-items: center;
       gap: 6px;
     }
+
     .legend-line {
       width: 30px;
       height: 4px;
       border-radius: 2px;
     }
+
     .express-line {
       position: absolute;
-      top: -20px;
+      top: -30px; /* 역사 위쪽으로 완전히 이동 */
       left: 0;
       width: 100%;
       height: 2px;
-      background-color: #FF3B30;
+      background-color: #FF3B30; /* 급행: 빨간색 */
       z-index: 1;
     }
+
     .normal-line {
       position: absolute;
-      top: 50%;
+      top: 50%; /* 역사 중앙 기준으로 */
       left: 0;
+      height: 0;
       width: 100%;
-      height: 2px;
-      background-color: #333;
-      transform: translateY(-50%);
-      z-index: -1;
+      border-top: 2px solid #333; /* 동그라미끼리 연결용 선 */
+      z-index: 0;
     }
+
     .line-container {
       display: flex;
       align-items: center;
       position: relative;
       white-space: nowrap;
     }
+
     .station {
       display: flex;
       flex-direction: column;
@@ -82,6 +91,7 @@
       margin: 0 20px;
       position: relative;
     }
+
     .station-point {
       width: 15px;
       height: 15px;
@@ -90,6 +100,7 @@
       border: 1px solid #666;
       z-index: 2;
     }
+
     .station-name {
       margin-top: 6px;
       font-size: 13px;
@@ -97,6 +108,7 @@
       text-align: center;
       white-space: nowrap;
     }
+
     .station-time {
       margin-top: 4px;
       font-size: 10px;
