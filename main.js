@@ -1,11 +1,28 @@
 
 // main.js
+// 브라우저 환경에서만 실행되는 코드
 if (typeof window !== "undefined") {
   window.addEventListener('DOMContentLoaded', () => {
-    // 이 부분은 브라우저에서만 실행되는 코드입니다.
     console.log("DOM fully loaded and parsed!");
   });
 }
+
+const express = require('express');
+const app = express();
+const port = process.env.PORT || 3000; // Heroku는 환경변수로 포트를 제공합니다
+
+// 정적 파일 제공
+app.use(express.static('public'));
+
+// 루트 경로 요청에 대한 응답
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/index.html'); // index.html 파일 제공
+});
+
+// 서버 실행
+app.listen(port, () => {
+  console.log(`App is listening on port ${port}`);
+});
 
 const normalTimes = [
   // ... (생략: 기존 normalTimes 정의)
@@ -146,6 +163,7 @@ function renderTrains() {
   });
 }
 
+// 브라우저 환경에서 실행
 if (typeof window !== "undefined") {
   window.addEventListener('DOMContentLoaded', () => {
     renderTrains();
