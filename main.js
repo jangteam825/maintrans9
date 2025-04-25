@@ -27,12 +27,19 @@ trainElement.style.top = train.type === 'express' ? '-60px' : '60px';
 trainElement.style.left = '50%';
 trainElement.style.transform = 'translateX(-50%)';
         
-        trainElement.innerHTML = `
-          <img src="assets/train_icon.png" alt="train icon" class="train-icon">
-          <div class="train-info">
-            <span class="train-number">열번: ${train.trainNumber}</span>
-            <span class="car-number">편성: ${train.carNumber}</span>
-          </div>`;
+      trainElement.innerHTML = train.type === 'express' ? `
+  <div class="train-info">
+    <span class="train-number">열번: ${train.trainNumber}</span><br>
+    <span class="car-number">편성: ${train.carNumber}</span>
+  </div>
+  <img src="assets/train_icon.png" alt="train icon" class="train-icon">
+` : `
+  <img src="assets/train_icon.png" alt="train icon" class="train-icon">
+  <div class="train-info">
+    <span class="train-number">열번: ${train.trainNumber}</span><br>
+    <span class="car-number">편성: ${train.carNumber}</span>
+  </div>
+`;
 
         // 생성된 열차 아이콘과 정보를 역 요소에 추가
         station.appendChild(trainElement);
