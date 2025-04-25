@@ -23,7 +23,7 @@ function renderTrains() {
         trainElement.className = 'train';
 
         trainElement.style.position = 'absolute';
-trainElement.style.top = train.type === 'express' ? '-60px' : '60px';
+trainElement.style.top = train.type === 'express' ? '-80px' : '60px';
 trainElement.style.left = '50%';
 trainElement.style.transform = 'translateX(-50%)';
         
