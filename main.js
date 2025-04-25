@@ -3,8 +3,8 @@
 
 // 열차 데이터 배열: 실제로는 나중에 엑셀 데이터를 여기에 넣거나 서버에서 가져와서 업데이트할 예정
 const trainData = [
-  { trainNumber: '9101', carNumber: '23', station: '개화' },
-  { trainNumber: '9102', carNumber: '24', station: '당산' }
+  { trainNumber: '9101', carNumber: '23', station: '개화', type: 'normal' },
+  { trainNumber: '9102', carNumber: '24', station: '당산', type: 'express' }
 ];
 
 // 열차 정보를 노선도에 렌더링하는 함수
@@ -22,6 +22,11 @@ function renderTrains() {
         const trainElement = document.createElement('div');
         trainElement.className = 'train';
 
+        trainElement.style.position = 'absolute';
+trainElement.style.top = train.type === 'express' ? '-60px' : '60px';
+trainElement.style.left = '50%';
+trainElement.style.transform = 'translateX(-50%)';
+        
         trainElement.innerHTML = `
           <img src="assets/train_icon.png" alt="train icon" class="train-icon">
           <div class="train-info">
