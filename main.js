@@ -140,10 +140,12 @@ function renderTrains() {
   });
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-  renderTrains();
-  setInterval(() => {
-    document.querySelectorAll('.train').forEach(e => e.remove());
+if (typeof window !== "undefined") {
+  window.addEventListener('DOMContentLoaded', () => {
     renderTrains();
-  }, 60000); // 1분마다 위치 갱신
-});
+    setInterval(() => {
+      document.querySelectorAll('.train').forEach(e => e.remove());
+      renderTrains();
+    }, 60000); // 1분마다 위치 갱신
+  });
+}
