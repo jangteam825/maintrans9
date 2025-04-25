@@ -1,52 +1,115 @@
 
 // main.js
 
-// 열차 데이터 배열: 실제로는 나중에 엑셀 데이터를 여기에 넣거나 서버에서 가져와서 업데이트할 예정
-const trainData = [
-  { trainNumber: '9101', carNumber: '23', station: '개화', type: 'normal' },
-  { trainNumber: '9102', carNumber: '24', station: '당산', type: 'express' }
+const normalTimes = [
+  // ... (생략: 기존 normalTimes 정의)
 ];
 
-// 열차 정보를 노선도에 렌더링하는 함수
-function renderTrains() {
-  // 모든 역(station) 요소를 가져옴
-  const stationElements = document.querySelectorAll('.station');
+const expressTimes = [
+  // ... (생략: 기존 expressTimes 정의)
+];
 
-  // 각 열차 데이터마다 역 요소들을 확인하여 열차 위치에 맞게 렌더링
+function getArrivalTime(trainType, from, to, departureTime) {
+  const schedule = trainType === 'express' ? expressTimes : normalTimes;
+
+  let totalMinutes = 0;
+  let started = false;
+
+  for (let i = 0; i < schedule.length; i++) {
+    const segment = schedule[i];
+    if (segment.from === from) {
+      started = true;
+    }
+    if (started) {
+      totalMinutes += segment.time;
+      if (segment.to === to) break;
+    }
+  }
+
+  const [hours, minutes] = departureTime.split(":").map(Number);
+  const departure = new Date();
+  departure.setHours(hours);
+  departure.setMinutes(minutes);
+
+  const arrival = new Date(departure.getTime() + totalMinutes * 60000);
+  return arrival.getHours().toString().padStart(2, '0') + ":" + arrival.getMinutes().toString().padStart(2, '0');
+}
+
+function renderTrains() {
+  const trainData = [
+    {
+      trainNumber: '9101',
+      carNumber: '23',
+      station: '개화',
+      type: 'normal',
+      from: '개화',
+      to: '중앙보훈병원',
+      departureTime: '06:00'
+    },
+    {
+      trainNumber: '9102',
+      carNumber: '24',
+      station: '당산역',
+      type: 'express',
+      from: '김포공항',
+      to: '중앙보훈병원역',
+      departureTime: '06:46'
+    }
+  ];
+
+  const now = new Date();
+
   trainData.forEach(train => {
+    const stationElements = document.querySelectorAll('.station');
     stationElements.forEach(station => {
       const nameElement = station.querySelector('.station-name');
-
-      // 데이터의 역 이름과 실제 HTML의 역 이름이 일치하면 열차 아이콘을 추가
       if (nameElement.textContent === train.station) {
         const trainElement = document.createElement('div');
         trainElement.className = 'train';
 
         trainElement.style.position = 'absolute';
-trainElement.style.top = train.type === 'express' ? '-80px' : '60px';
-trainElement.style.left = '50%';
-trainElement.style.transform = 'translateX(-50%)';
-        
-      trainElement.innerHTML = train.type === 'express' ? `
-  <div class="train-info">
-    <span class="train-number">열번: ${train.trainNumber}</span><br>
-    <span class="car-number">편성: ${train.carNumber}</span>
-  </div>
-  <img src="assets/train_icon.png" alt="train icon" class="train-icon">
-` : `
-  <img src="assets/train_icon.png" alt="train icon" class="train-icon">
-  <div class="train-info">
-    <span class="train-number">열번: ${train.trainNumber}</span><br>
-    <span class="car-number">편성: ${train.carNumber}</span>
-  </div>
-`;
+        trainElement.style.top = train.type === 'express' ? '-80px' : '60px';
+        trainElement.style.left = '50%';
+        trainElement.style.transform = 'translateX(-50%)';
 
-        // 생성된 열차 아이콘과 정보를 역 요소에 추가
+        const arrivalToDangsan = getArrivalTime(train.type, train.from, '당산역', train.departureTime);
+        const arrivalToBohun = getArrivalTime(train.type, train.from, '중앙보훈병원', train.departureTime);
+        const arrivalToDangsanDown = getArrivalTime(train.type, train.from, '당산역', train.departureTime); // 단순화
+
+        const [depH, depM] = train.departureTime.split(":").map(Number);
+        const depDate = new Date();
+        depDate.setHours(depH, depM);
+
+        const arrDangsanDate = new Date(depDate.getTime() + 60000 * (parseInt(arrivalToDangsan.split(":"))[0] * 60 + parseInt(arrivalToDangsan.split(":"))[1]));
+        const showDown = now > arrDangsanDate;
+
+        const primaryArrivalLabel = showDown ? '보훈병원 하선' : '당산 상선';
+        const primaryArrivalTime = showDown ? arrivalToBohun : arrivalToDangsan;
+        const secondaryArrivalLabel = showDown ? '당산 하선' : '보훈병원 상선';
+        const secondaryArrivalTime = showDown ? arrivalToDangsanDown : arrivalToBohun;
+
+        trainElement.innerHTML = train.type === 'express' ? `
+          <div class="train-info">
+            <span class="train-number">열번: ${train.trainNumber}</span><br>
+            <span class="car-number">편성: ${train.carNumber}</span><br>
+            <span class="arrival-time">${primaryArrivalLabel}: ${primaryArrivalTime}</span><br>
+            <span class="arrival-time">${secondaryArrivalLabel}: ${secondaryArrivalTime}</span>
+          </div>
+          <img src="assets/train_icon.png" alt="train icon" class="train-icon">
+        ` : `
+          <img src="assets/train_icon.png" alt="train icon" class="train-icon">
+          <div class="train-info">
+            <span class="train-number">열번: ${train.trainNumber}</span><br>
+            <span class="car-number">편성: ${train.carNumber}</span><br>
+            <span class="arrival-time">${primaryArrivalLabel}: ${primaryArrivalTime}</span><br>
+            <span class="arrival-time">${secondaryArrivalLabel}: ${secondaryArrivalTime}</span>
+          </div>
+        `;
+
         station.appendChild(trainElement);
       }
     });
   });
 }
 
-// 페이지 로딩 후 바로 열차 정보 렌더링
 window.addEventListener('DOMContentLoaded', renderTrains);
