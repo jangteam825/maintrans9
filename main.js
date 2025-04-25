@@ -1,5 +1,11 @@
 
 // main.js
+if (typeof window !== "undefined") {
+  window.addEventListener('DOMContentLoaded', () => {
+    // 이 부분은 브라우저에서만 실행되는 코드입니다.
+    console.log("DOM fully loaded and parsed!");
+  });
+}
 
 const normalTimes = [
   // ... (생략: 기존 normalTimes 정의)
