@@ -642,7 +642,8 @@
     statusDiv.textContent = '업로드 중...';
 
     try {
-      const res = await fetch('https://YOUR-HEROKU-APP.herokuapp.com/upload', {
+      const res = await fetch('https://maintrans9-upload.herokuapp.com/upload', {
+
         method: 'POST',
         body: formData
       });
