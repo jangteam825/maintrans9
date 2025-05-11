@@ -173,3 +173,41 @@ if (typeof window !== "undefined") {
     }, 60000); // 1분마다 위치 갱신
   });
 }
+// 🚆 열차 시각화용 샘플 데이터 불러오기
+fetch("train_visual_sample.json")
+  .then((res) => res.json())
+  .then((trains) => {
+    console.log("🔥 열차 시각화 시작", trains);
+
+    trains.forEach((train) => {
+      const elem = document.createElement("div");
+      elem.className = "moving-train";
+      elem.innerText = train.열번;
+
+      // 현재 위치역에 열차 붙이기
+      document.querySelectorAll(".station-name").forEach((el) => {
+        if (el.textContent.includes(train.현위치역)) {
+          const dot = el.previousElementSibling;
+          if (dot) dot.appendChild(elem);
+        }
+      });
+
+      // 3초마다 다음역으로 이동
+      let pos = 1;
+      const interval = setInterval(() => {
+        if (pos >= train.경로.length) return;
+        const nextStation = train.경로[pos];
+
+        document.querySelectorAll(".station-name").forEach((el) => {
+          if (el.textContent.includes(nextStation)) {
+            const dot = el.previousElementSibling;
+            if (dot && elem) {
+              dot.appendChild(elem);
+            }
+          }
+        });
+
+        pos++;
+      }, 3000);
+    });
+  });
