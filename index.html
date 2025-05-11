@@ -148,6 +148,12 @@
     </div>
   </div>
 
+  <form id="uploadForm" style="margin-top: 20px;">
+  <input type="file" name="file" id="fileInput" accept=".xlsx" required />
+  <button type="submit">엑셀 업로드</button>
+</form>
+<div id="uploadStatus" style="margin-top: 10px; font-weight: bold;"></div>
+
 
   <div class="line-section">
     <div class="line-title">상선 ▶️</div>
@@ -624,6 +630,33 @@
   </div>
 
 </div>
+<!-- 📍 요기! -->
+<script>
+  document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const file = document.getElementById('fileInput').files[0];
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const statusDiv = document.getElementById('uploadStatus');
+    statusDiv.textContent = '업로드 중...';
+
+    try {
+      const res = await fetch('https://YOUR-HEROKU-APP.herokuapp.com/upload', {
+        method: 'POST',
+        body: formData
+      });
+      const result = await res.json();
+      statusDiv.textContent = result.message || result.error;
+    } catch (err) {
+      statusDiv.textContent = '❌ 서버 업로드 오류';
+    }
+  });
+</script>
+
+<script src="main.js"></script>
+</body>
+</html>
 
   <script src="main.js"></script>
 </body>
