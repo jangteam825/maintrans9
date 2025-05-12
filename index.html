@@ -3,7 +3,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <title>9호선 도착 시각 시스템</title>
+  <title>9호선 열차 도착 시각 시스템</title>
   <script type="module">
     import * as XLSX from "https://cdn.sheetjs.com/xlsx-0.20.0/package/xlsx.mjs";
     import { visualizeTrains } from "./main.js";
@@ -16,12 +16,11 @@
         const sheet = workbook.Sheets[workbook.SheetNames[0]];
         const json = XLSX.utils.sheet_to_json(sheet, { defval: "" });
 
-        // 샘플 세그먼트 시간 (trainNo + duration)
+        // 샘플 역간 시간 (수동)
         const segmentTimes = [
           { trainNo: "9518", duration: 3 },
           { trainNo: "9518", duration: 5 },
           { trainNo: "9518", duration: 2 },
-          // ...
         ];
 
         visualizeTrains(json, segmentTimes);
@@ -29,13 +28,33 @@
     });
   </script>
   <style>
-    body { font-family: sans-serif; }
-    .train-info { margin: 10px 0; }
+    body { font-family: sans-serif; padding: 20px; }
+    .line { display: flex; margin: 10px 0; }
+    .station { padding: 5px 10px; background: #ffd700; margin-right: 5px; border-radius: 4px; }
+    .train-info { margin: 10px 0; font-weight: bold; }
   </style>
 </head>
 <body>
   <h1>9호선 열차 도착 시각 시스템</h1>
   <input type="file" id="excelUpload" />
+  <p>엑셀을 업로드하면 열차 도착시간이 아래에 표시됩니다.</p>
+
+  <div class="line">
+    <div class="station">개화</div>
+    <div class="station">김포공항</div>
+    <div class="station">공항시장</div>
+    <div class="station">신방화</div>
+    <div class="station">마곡나루</div>
+    <div class="station">양천향교</div>
+    <div class="station">가양</div>
+    <div class="station">증미</div>
+    <div class="station">등촌</div>
+    <div class="station">염창</div>
+    <div class="station">신목동</div>
+    <div class="station">선유도</div>
+    <div class="station">당산</div>
+  </div>
+
   <div id="lines-wrapper"></div>
 </body>
 </html>

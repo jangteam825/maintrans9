@@ -1,14 +1,11 @@
 
-// main.js (브라우저 전용)
-// 열차 도착시간 계산 및 시각화 관련 함수만 유지
-
-function parseDepartureTime(timeStr) {
+export function parseDepartureTime(timeStr) {
   if (!timeStr || typeof timeStr !== "string") return null;
   const [hours, minutes] = timeStr.split(":").map(Number);
   return new Date().setHours(hours, minutes, 0, 0);
 }
 
-function calculateArrivalTime(train, segmentTimes) {
+export function calculateArrivalTime(train, segmentTimes) {
   const departureTime = parseDepartureTime(train.departureTime);
   if (!departureTime) return null;
 
@@ -22,7 +19,7 @@ function calculateArrivalTime(train, segmentTimes) {
   return new Date(departureTime + totalMinutes * 60000);
 }
 
-function visualizeTrains(trains, segmentTimes) {
+export function visualizeTrains(trains, segmentTimes) {
   const now = new Date();
 
   trains.forEach((train) => {
