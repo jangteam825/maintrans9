@@ -70,7 +70,7 @@ try {
       });
 
     } catch (err) {
-      console.error('❌ 업로드 실패:', err);
+      console.error(`❌ 업로드 실패:`, err);;
       status.textContent = '업로드 실패: ' + err.message;
       status.style.color = 'red';
     }
