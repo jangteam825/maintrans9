@@ -1,36 +1,60 @@
+// train.js
+
+// 특정 구간의 경과율을 계산합니다.
+function getProgressPercentage(dep, arr) {
+  const depT = new Date(`1970-01-01T${dep}:00`);
+  const arrT = new Date(`1970-01-01T${arr}:00`);
+  const total = (arrT - depT) / 60000;
+  const now = new Date();
+  const elapsed = (now - depT) / 60000;
+  return Math.min(100, Math.max(0, (elapsed / total) * 100));
+}
 
 document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("excelUpload").addEventListener("change", async (e) => {
+  const upload = document.getElementById("excelUpload");
+  const status = document.getElementById("uploadStatus");
+
+  upload.addEventListener("change", async (e) => {
     const file = e.target.files[0];
-    const data = await file.arrayBuffer();
-    const workbook = XLSX.read(data);
-    const sheet = workbook.Sheets[workbook.SheetNames[0]];
-    const json = XLSX.utils.sheet_to_json(sheet, { defval: "" });
+    if (!file) return;
 
-    const now = new Date();
+    status.textContent = "업로드 중…";
+    status.style.color = "green";
 
-    json.forEach(train => {
-      const stationName = train["도착역"] || train["to"];
-      const timeStr = train["도착시각"] || train["arrivalTime"] || train["출발시각"] || train["departureTime"];
+    const form = new FormData();
+    form.append("file", file);
 
-      if (!stationName || !timeStr) return;
+    try {
+      const res = await fetch(
+        "https://maintrans9-upload-6e3ba659a8bc.herokuapp.com/api/process",
+        { method: "POST", body: form, mode: "cors" }
+      );
+      if (!res.ok) throw new Error(res.statusText);
+      const trains = await res.json();
 
-      const [hh, mm] = timeStr.split(":").map(Number);
-      const arrival = new Date();
-      arrival.setHours(hh, mm, 0, 0);
+      status.textContent = "업로드 및 분석 성공";
 
-      const diffMin = Math.floor((arrival - now) / 60000);
-      if (diffMin < 0) return;
-
-      // DOM에서 해당 역 찾아서 .station-time 업데이트
-      document.querySelectorAll(".station").forEach(stationEl => {
-        const nameEl = stationEl.querySelector(".station-name");
-        const timeEl = stationEl.querySelector(".station-time");
-
-        if (nameEl && nameEl.textContent.trim() === stationName.trim()) {
-          timeEl.textContent = `도착까지 ${diffMin}분`;
-        }
+      ["up-line", "down-line"].forEach((id) => {
+        const layer = document
+          .getElementById(id)
+          .querySelector(".train-icons");
+        layer.innerHTML = "";
+        trains.forEach((train) => {
+          const pct = getProgressPercentage(
+            train.departure,
+            train.arrival
+          );
+          const img = document.createElement("img");
+          img.src = "train-icon.png";  // 프로젝트 루트에 위치
+          img.className = "train";
+          img.style.left = pct + "%";
+          layer.appendChild(img);
+        });
       });
-    });
+    } catch (err) {
+      console.error(err);
+      status.textContent = "업로드 실패: " + err.message;
+      status.style.color = "red";
+    }
   });
 });
