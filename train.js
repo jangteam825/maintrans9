@@ -1,4 +1,24 @@
 // ─── train.js ───
+trains.forEach(train => {
+  console.log("📦 열차 데이터:", train);
+
+  if (!train.departure || !train.arrival) {
+    console.warn("❗ dep/arr 없음:", train);
+    return;
+  }
+  if (!Array.isArray(train.stationTimes)) {
+    console.warn("❗ stationTimes 없음:", train);
+    return;
+  }
+
+  const pct = getProgressPercentage(train.departure, train.arrival);
+  const img = document.createElement('img');
+  img.src = 'assets/train_icon.png';
+  img.className = 'train';
+  img.style.left = pct + '%';
+  iconLayer.append(img);
+});
+
 // 1) 업로드 버튼 & API 호출 + 열차 그리기
 window.addEventListener('DOMContentLoaded', () => {
   const upload = document.getElementById('excelUpload');
