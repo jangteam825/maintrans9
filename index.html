@@ -4,7 +4,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>9호선 노선도</title>
   <style>
     body {
@@ -59,26 +59,18 @@
       height: 4px;
     }
     .express-line {
-      top: -40px;
-      left: 0;
-      right: 0;
-      background-color: #FF3B30;
-      z-index: 1;
+      top: -40px; left: 0; right: 0;
+      background-color: #FF3B30; z-index: 1;
     }
     .normal-line {
-      top: 110%;
-      left: 0;
-      right: 0;
-      background-color: #FFCC00;
-      z-index: 0;
+      top: 110%; left: 0; right: 0;
+      background-color: #FFCC00; z-index: 0;
     }
     .base-line {
-      top: 7px;
-      left: 50%;
+      top: 7px; left: 50%;
       transform: translateX(-50%);
       width: calc(100% - 80px);
-      background-color: #333;
-      z-index: 0;
+      background-color: #333; z-index: 0;
     }
     .line-container {
       display: flex;
@@ -120,10 +112,9 @@
 </head>
 <body>
 
-  <!-- ① 여기에 파일 업로드 버튼을 추가 -->
+  <!-- 엑셀 업로드 버튼 -->
   <input type="file" id="excelUpload" style="margin-bottom:20px;" />
 
-  <!-- ② 기존 노선도 HTML (legend, line-section, station…)을 그대로 둡니다 -->
   <div class="lines-wrapper">
     <div class="legend">
       <div class="legend-item">
@@ -134,6 +125,7 @@
       </div>
     </div>
 
+    <!-- 상선 구간 -->
     <div class="line-section">
       <div class="line-title">상선 ▶️</div>
       <div class="line-container">
@@ -141,16 +133,48 @@
         <div class="base-line"></div>
         <div class="normal-line"></div>
 
-        <!-- station 요소들… -->
-        <div class="station">
-          <div class="station-point"></div>
-          <div class="station-name">개화</div>
-          <div class="station-time"></div>
-        </div>
-        <!-- (중략: 김포공항, 공항시장, …, 중앙보훈병원) -->
+        <div class="station"><div class="station-point"></div><div class="station-name">개화</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">김포공항</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">공항시장</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">신방화</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">마곡나루</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">양천향교</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">가양</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">증미</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">등촌</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">염창</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">신목동</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">선유도</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">당산</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">국회의사당</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">여의도</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">샛강</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">노량진</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">노들</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">흑석</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">동작</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">구반포</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">신반포</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">고속터미널</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">사평</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">신논현</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">언주</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">선정릉</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">삼성중앙</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">봉은사</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">종합운동장</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">삼전</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">석촌고분</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">석촌</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">송파나루</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">한성백제</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">올림픽공원</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">둔촌오륜</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">중앙보훈병원</div><div class="station-time"></div></div>
       </div>
     </div>
 
+    <!-- 하선 구간 -->
     <div class="line-section">
       <div class="line-title">하선 ▶️</div>
       <div class="line-container">
@@ -158,38 +182,65 @@
         <div class="base-line"></div>
         <div class="normal-line"></div>
 
-        <!-- station 요소들… -->
-        <div class="station">
-          <div class="station-point"></div>
-          <div class="station-name">중앙보훈병원</div>
-          <div class="station-time"></div>
-        </div>
-        <!-- (중략: 둔촌오륜, 올림픽공원, …, 개화) -->
+        <div class="station"><div class="station-point"></div><div class="station-name">중앙보훈병원</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">둔촌오륜</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">올림픽공원</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">한성백제</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">송파나루</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">석촌</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">석촌고분</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">삼전</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">종합운동장</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">봉은사</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">삼성중앙</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">선정릉</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">언주</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">신논현</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">사평</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">고속터미널</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">신반포</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">구반포</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">동작</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">흑석</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">노들</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">노량진</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">샛강</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">여의도</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">국회의사당</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">당산</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">선유도</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">신목동</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">염창</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">등촌</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">증미</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">가양</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">양천향교</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">마곡나루</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">신방화</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">공항시장</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">김포공항</div><div class="station-time"></div></div>
+        <div class="station"><div class="station-point"></div><div class="station-name">개화</div><div class="station-time"></div></div>
       </div>
     </div>
   </div>
 
-  <!-- ③ 엑셀 업로드 후 Heroku API 호출 스크립트 (</body> 바로 위) -->
+  <!-- 업로드 후 Heroku API 호출 스크립트 -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      const upload = document.getElementById("excelUpload");
-      upload.addEventListener("change", async (e) => {
+      document.getElementById("excelUpload").addEventListener("change", async (e) => {
         const file = e.target.files[0];
         if (!file) return;
-
         const form = new FormData();
         form.append("file", file);
-
         try {
           const res = await fetch(
             "https://maintrans9-upload-6e3ba659a8bc.herokuapp.com/api/process",
             { method: "POST", body: form }
           );
-          const trains = await res.json();  // [{ station: "당산", minutes: N }, …]
-
-          document.querySelectorAll(".station").forEach((el) => {
+          const trains = await res.json();
+          document.querySelectorAll(".station").forEach(el => {
             const name = el.querySelector(".station-name").textContent.trim();
-            const match = trains.find((t) => t.station.trim() === name);
+            const match = trains.find(t => t.station.trim() === name);
             if (match) {
               el.querySelector(".station-time").textContent =
                 `도착까지 ${match.minutes}분`;
@@ -204,4 +255,5 @@
 
 </body>
 </html>
+
 
