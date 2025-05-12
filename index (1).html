@@ -1,0 +1,131 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>9호선 노선도 시각화</title>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/xlsx.full.min.js"></script>
+  <script defer src="main.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      background-color: #f0f2f5;
+      font-family: Arial, sans-serif;
+      overflow-x: auto;
+    }
+    .lines-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 100px;
+      min-width: max-content;
+    }
+    .line-section {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 50px;
+    }
+    .line-title {
+      font-size: 20px;
+      font-weight: bold;
+      background-color: #FFCC00;
+      padding: 6px 12px;
+      border-radius: 12px;
+      color: #333;
+      margin-bottom: 20px;
+    }
+    .legend {
+      display: flex;
+      gap: 20px;
+      margin-top: 10px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      align-items: center;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .legend-line {
+      width: 30px;
+      height: 4px;
+      border-radius: 2px;
+    }
+    .express-line, .normal-line, .base-line {
+      position: absolute;
+      height: 4px;
+    }
+    .express-line {
+      top: -40px;
+      left: 0;
+      right: 0;
+      background-color: #FF3B30;
+      z-index: 1;
+    }
+    .normal-line {
+      top: 110%;
+      left: 0;
+      right: 0;
+      background-color: #FFCC00;
+      z-index: 0;
+    }
+    .base-line {
+      top: 7px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 80px);
+      background-color: #333;
+      z-index: 0;
+    }
+    .line-container {
+      display: flex;
+      align-items: center;
+      position: relative;
+      white-space: nowrap;
+    }
+    .station {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0 20px;
+      position: relative;
+    }
+    .station-point {
+      width: 15px;
+      height: 15px;
+      background-color: #FFC300;
+      border-radius: 50%;
+      border: 1px solid #666;
+      z-index: 2;
+    }
+    .station-name {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #444;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .station-time {
+      margin-top: 6px;
+      font-size: 10px;
+      color: #555;
+      height: 14px;
+      text-align: center;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+  <input type="file" id="excelUpload" style="margin-bottom: 20px;" />
+  <!-- 여기 아래에 너가 복붙했던 모든 노선도 HTML 그대로 삽입하면 됨 -->
+  <!-- 이 코드는 해당 구조에 붙여서 완성 -->
+  <div class="lines-wrapper">
+    <!-- 복붙된 노선도 HTML 구조 여기에 삽입해야 함 -->
+    <!-- 줄임 -->
+  </div>
+</body>
+</html>

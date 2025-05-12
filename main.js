@@ -1,36 +1,36 @@
 
-export function parseDepartureTime(timeStr) {
-  if (!timeStr || typeof timeStr !== "string") return null;
-  const [hours, minutes] = timeStr.split(":").map(Number);
-  return new Date().setHours(hours, minutes, 0, 0);
-}
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("excelUpload").addEventListener("change", async (e) => {
+    const file = e.target.files[0];
+    const data = await file.arrayBuffer();
+    const workbook = XLSX.read(data);
+    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+    const json = XLSX.utils.sheet_to_json(sheet, { defval: "" });
 
-export function calculateArrivalTime(train, segmentTimes) {
-  const departureTime = parseDepartureTime(train.departureTime);
-  if (!departureTime) return null;
+    const now = new Date();
 
-  let totalMinutes = 0;
-  for (let segment of segmentTimes) {
-    if (segment.trainNo === train.trainNo) {
-      totalMinutes += parseInt(segment.duration);
-    }
-  }
+    json.forEach(train => {
+      const stationName = train["도착역"] || train["to"];
+      const timeStr = train["도착시각"] || train["arrivalTime"] || train["출발시각"] || train["departureTime"];
 
-  return new Date(departureTime + totalMinutes * 60000);
-}
+      if (!stationName || !timeStr) return;
 
-export function visualizeTrains(trains, segmentTimes) {
-  const now = new Date();
+      const [hh, mm] = timeStr.split(":").map(Number);
+      const arrival = new Date();
+      arrival.setHours(hh, mm, 0, 0);
 
-  trains.forEach((train) => {
-    const arrivalTime = calculateArrivalTime(train, segmentTimes);
-    if (!arrivalTime || arrivalTime < now) return;
+      const diffMin = Math.floor((arrival - now) / 60000);
+      if (diffMin < 0) return;
 
-    const countdown = Math.floor((arrivalTime - now) / 60000);
+      // DOM에서 해당 역 찾아서 .station-time 업데이트
+      document.querySelectorAll(".station").forEach(stationEl => {
+        const nameEl = stationEl.querySelector(".station-name");
+        const timeEl = stationEl.querySelector(".station-time");
 
-    const el = document.createElement("div");
-    el.className = "train-info";
-    el.innerText = `열번: ${train.trainNo}, 도착까지 ${countdown}분`;
-    document.querySelector("#lines-wrapper").appendChild(el);
+        if (nameEl && nameEl.textContent.trim() === stationName.trim()) {
+          timeEl.textContent = `도착까지 ${diffMin}분`;
+        }
+      });
+    });
   });
-}
+});
