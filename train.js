@@ -1,6 +1,4 @@
 // ─── train.js ───
-
-// 1) 서버에서 행로표 데이터를 받아와서 처리
 document.addEventListener("DOMContentLoaded", () => {
   const upload = document.getElementById("excelUpload");
   const status = document.getElementById("uploadStatus");
@@ -9,7 +7,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const file = e.target.files[0];
     if (!file) return;
 
-    status.textContent = "업로드 중…"; status.style.color = "green";
+    status.textContent = "업로드 중…";
+    status.style.color = "green";
+
     const form = new FormData();
     form.append("file", file);
 
@@ -19,22 +19,20 @@ document.addEventListener("DOMContentLoaded", () => {
         { method: "POST", body: form, mode: "cors" }
       );
       if (!res.ok) throw new Error(res.statusText);
-      const trains = await res.json();
+      const trains = await res.json();  // [{ departure, arrival, trainId, stationTimes: [{ station, minutes }, …] }, …]
 
       status.textContent = "업로드 및 분석 성공";
 
-      // 상/하선 각각 처리
-      ["up","down"].forEach(dir => {
-        const container = document.getElementById(
-          dir === "up" ? "up-line" : "down-line"
-        );
+      ["up", "down"].forEach((dir) => {
+        // up-line / down-line 컨테이너
+        const container = document.getElementById(dir === "up" ? "up-line" : "down-line");
         const iconLayer = container.querySelector(".train-icons");
-        iconLayer.innerHTML = ""; // 초기화
+        iconLayer.innerHTML = ""; // 기존 아이콘 초기화
 
-        trains.forEach(train => {
-          // departure/arrival/stationTimes 유효성 검사
+        trains.forEach((train) => {
+          // 1) 필수 필드 검사
           if (!train.departure || !train.arrival) {
-            console.warn("Missing dep/arr:", train);
+            console.warn("Missing departure/arrival:", train);
             return;
           }
           if (!Array.isArray(train.stationTimes)) {
@@ -42,21 +40,26 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
           }
 
-          // 0~100% 위치 계산
-          const pct = getProgressPercentage(
-            train.departure,
-            train.arrival
-          );
+          // 2) 역별 도착예정분 업데이트
+          train.stationTimes.forEach((st) => {
+            const stationEls = container.querySelectorAll(".station");
+            stationEls.forEach((el) => {
+              const nameEl = el.querySelector(".station-name");
+              if (nameEl.textContent.trim() === st.station.trim()) {
+                el.querySelector(".station-time").textContent = `도착까지 ${st.minutes}분`;
+              }
+            });
+          });
 
-          // 아이콘 생성
+          // 3) 현재 진행 퍼센트 계산 후 아이콘 생성
+          const pct = getProgressPercentage(train.departure, train.arrival);
           const img = document.createElement("img");
-          img.src = "assets/train_icon.png";  // assets 폴더에 있는 기차 아이콘
+          img.src = "assets/train_icon.png";  // assets 폴더에 올려둔 아이콘
           img.className = "train";
           img.style.left = pct + "%";
           iconLayer.append(img);
         });
       });
-
     } catch (err) {
       console.error(err);
       status.textContent = "업로드 실패: " + err.message;
@@ -65,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// 2) 헬퍼 함수: "HH:MM" 문자열을 받아서 0~100사이 퍼센티지 계산
+// ─── 헬퍼: "HH:MM" → 0~100 사이 퍼센티지 계산 ───
 function getProgressPercentage(dep, arr) {
   if (typeof dep !== "string" || typeof arr !== "string") {
     console.warn("invalid dep/arr:", dep, arr);
@@ -73,11 +76,12 @@ function getProgressPercentage(dep, arr) {
   }
   const [dh, dm] = dep.split(":").map(Number);
   const [ah, am] = arr.split(":").map(Number);
-  const depDate = new Date(0,0,0, dh, dm);
-  const arrDate = new Date(0,0,0, ah, am);
-  const total = (arrDate - depDate) / 60000; // 분
+  const depDate = new Date(0, 0, 0, dh, dm);
+  const arrDate = new Date(0, 0, 0, ah, am);
+  const total = (arrDate - depDate) / 60000; // 총 소요분
   const now = new Date();
-  const nowMin = (now.getHours()*60 + now.getMinutes()) - (dh*60 + dm);
+  // 출발 기준으로 지금까지 흐른 분
+  const nowMin = now.getHours() * 60 + now.getMinutes() - (dh * 60 + dm);
   const pct = (nowMin / total) * 100;
   return Math.max(0, Math.min(100, pct));
 }
