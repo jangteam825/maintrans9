@@ -1,4 +1,21 @@
-// train.js
+// ─── train.js ───
+…  
+fetch(…)
+  .then(res => res.json())
+  .then(trains => {
+-   trains.forEach(train => {
++   trains.forEach(train => {
++     // departure 또는 arrival 둘 중 하나라도 없으면 스킵
++     if (!train.departure || !train.arrival) {
++       console.warn("Missing departure/arrival:", train);
++       return;
++     }
++     // stationTimes 배열이 없거나 비정상이면 스킵
++     if (!Array.isArray(train.stationTimes)) {
++       console.warn("Missing stationTimes:", train);
++       return;
++     }
+train.js
 // —————————————————————————————————————————
 // helper: "HH:MM" 문자열을 받아서 0~100 사이의 퍼센티지로 리턴
 function getProgressPercentage(dep, arr) {
