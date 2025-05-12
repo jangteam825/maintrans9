@@ -14,16 +14,14 @@ window.addEventListener('DOMContentLoaded', () => {
     form.append('file', file);
 
     try {
-      const res = await fetch(
-        'https://maintrans9-upload-6e3ba659a8bc.herokuapp.com/api/process',
-        { method: 'POST', body: form, mode: 'cors' }
-      );
-      const rawText = await res.text();
+const res = await fetch(
+  'https://maintrans9-upload-6e3ba659a8bc.herokuapp.com/api/process',
+  { method: 'POST', body: form, mode: 'cors' }
+);
+const rawText = await res.text();
 console.log("🛰️ Heroku 응답 원문:", rawText);
 
 const trains = JSON.parse(rawText);
-      if (!res.ok) throw new Error(res.statusText);
-      const trains = await res.json();
       console.log('🚆 수신된 열차 데이터:', trains); // 📌 디버깅용 로그
       status.textContent = '업로드 및 분석 성공';
 
