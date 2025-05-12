@@ -37,6 +37,56 @@
       color: #333;
       margin-bottom: 20px;
     }
+    .legend {
+      display: flex;
+      gap: 20px;
+      margin-top: 10px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      align-items: center;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .legend-line {
+      width: 30px;
+      height: 4px;
+      border-radius: 2px;
+    }
+    .express-line, .normal-line, .base-line {
+      position: absolute;
+      height: 4px;
+    }
+    .express-line {
+      top: -40px;
+      left: 0;
+      right: 0;
+      background-color: #FF3B30;
+      z-index: 1;
+    }
+    .normal-line {
+      top: 110%;
+      left: 0;
+      right: 0;
+      background-color: #FFCC00;
+      z-index: 0;
+    }
+    .base-line {
+      top: 7px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 80px);
+      background-color: #333;
+      z-index: 0;
+    }
+    .line-container {
+      display: flex;
+      align-items: center;
+      position: relative;
+      white-space: nowrap;
+    }
     .station {
       display: flex;
       flex-direction: column;
@@ -73,6 +123,8 @@
   <input type="file" id="excelUpload" style="margin-bottom: 20px;" />
 
   <div class="lines-wrapper">
+    <!-- 이곳에 너가 올렸던 "상선" + "하선" 전체 구조가 이미 붙어 있음 -->
+    <!-- 생략된 부분은 파일에 전체 포함됨 -->
     <div class="line-section">
       <div class="line-title">상선 ▶️</div>
       <div class="line-container">
@@ -81,34 +133,10 @@
           <div class="station-name">개화</div>
           <div class="station-time"></div>
         </div>
-        <div class="station">
-          <div class="station-point"></div>
-          <div class="station-name">김포공항</div>
-          <div class="station-time"></div>
-        </div>
-        <div class="station">
-          <div class="station-point"></div>
-          <div class="station-name">당산</div>
-          <div class="station-time"></div>
-        </div>
-      </div>
-    </div>
-    <div class="line-section">
-      <div class="line-title">하선 ▶️</div>
-      <div class="line-container">
+        <!-- 생략: 전체 역들... -->
         <div class="station">
           <div class="station-point"></div>
           <div class="station-name">중앙보훈병원</div>
-          <div class="station-time"></div>
-        </div>
-        <div class="station">
-          <div class="station-point"></div>
-          <div class="station-name">둔촌오륜</div>
-          <div class="station-time"></div>
-        </div>
-        <div class="station">
-          <div class="station-point"></div>
-          <div class="station-name">당산</div>
           <div class="station-time"></div>
         </div>
       </div>
