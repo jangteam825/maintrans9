@@ -82,4 +82,19 @@ window.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      status.textContent = "업
+      status.textContent = "업로드 및 분석 성공";
+      status.style.color = "blue";
+
+      trains.forEach((train) => {
+        const pct = getProgressByRoute(train, segmentTimes);
+        console.log(`📍 ${train.현위치역}→${train.다음역} 진행률: ${pct.toFixed(1)}%`);
+        // 여기서 열차를 노선도 상에 그리는 함수로 넘겨도 됨
+      });
+
+    } catch (err) {
+      console.error(`❌ 업로드 실패:`, err);
+      status.textContent = "업로드 실패: " + err.message;
+      status.style.color = "red";
+    }
+  });
+});
