@@ -13,23 +13,24 @@ window.addEventListener('DOMContentLoaded', () => {
     const form = new FormData();
     form.append('file', file);
 
-let trains = [];
+    let trains = [];
 
-try {
-  trains = JSON.parse(rawText);
-  if (!Array.isArray(trains)) {
-    console.error('❌ 유효하지 않은 열차 데이터 형식:', trains);
-    status.textContent = '서버 응답 오류 (데이터 형식 오류)';
-    status.style.color = 'red';
-    return;
-  }
-} catch (parseErr) {
-  console.error('❌ JSON 파싱 실패:', parseErr, rawText);
-  status.textContent = '서버 응답 오류 (파싱 실패)';
-  status.style.color = 'red';
-  return;
-}
+    try {
+      const res = await fetch(
+        'https://maintrans9-upload-6e3ba659a8bc.herokuapp.com/api/process',
+        { method: 'POST', body: form, mode: 'cors' }
+      );
+      if (!res.ok) throw new Error(res.statusText);
 
+      const rawText = await res.text();
+      trains = JSON.parse(rawText);
+
+      if (!Array.isArray(trains)) {
+        console.error('❌ 유효하지 않은 열차 데이터 형식:', trains);
+        status.textContent = '서버 응답 오류 (데이터 형식 오류)';
+        status.style.color = 'red';
+        return;
+      }
 
       console.log('🚆 수신된 열차 데이터:', trains);
       status.textContent = '업로드 및 분석 성공';
@@ -69,8 +70,7 @@ try {
           });
       });
 
-    {
-      catch (err) {
+    } catch (err) {
       console.error(`❌ 업로드 실패:`, err);
       status.textContent = '업로드 실패: ' + err.message;
       status.style.color = 'red';
