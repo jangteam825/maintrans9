@@ -29,7 +29,7 @@ function getProgressByRoute(train, segmentTimes) {
     const from = route[i];
     const to = route[i + 1];
     const key = `${from}→${to}`;
-    const segmentTime = segmentTimes[key] || 2; // 기본값 2분
+    const segmentTime = segmentTimes[key] || 2;
 
     total += segmentTime;
 
@@ -85,10 +85,29 @@ window.addEventListener("DOMContentLoaded", () => {
       status.textContent = "업로드 및 분석 성공";
       status.style.color = "blue";
 
+      // 기존 아이콘 제거 (새로 그림)
+      document.querySelectorAll(".station .train-icon").forEach(icon => icon.remove());
+
       trains.forEach((train) => {
         const pct = getProgressByRoute(train, segmentTimes);
         console.log(`📍 ${train.현위치역}→${train.다음역} 진행률: ${pct.toFixed(1)}%`);
-        // 여기서 열차를 노선도 상에 그리는 함수로 넘겨도 됨
+
+        // 노선도에서 .station-name과 매칭해서 train_icon 표시
+        document.querySelectorAll(".station").forEach(stationEl => {
+          const nameEl = stationEl.querySelector(".station-name");
+          if (nameEl && nameEl.textContent.trim() === train.현위치역.trim()) {
+            if (!stationEl.querySelector(".train-icon")) {
+              const icon = document.createElement("img");
+              icon.src = "assets/train_icon.png";
+              icon.alt = "열차";
+              icon.className = "train-icon";
+              icon.style.width = "20px";
+              icon.style.marginLeft = "4px";
+              icon.style.verticalAlign = "middle";
+              stationEl.appendChild(icon);
+            }
+          }
+        });
       });
 
     } catch (err) {
