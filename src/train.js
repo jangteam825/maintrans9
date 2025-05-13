@@ -139,6 +139,11 @@ window.addEventListener("DOMContentLoaded", () => {
 
         const pct = getProgressByRoute(train, segmentMap);
         console.log(`📍 ${train.현위치역}→${train.다음역} (${train.열번}) 진행률: ${pct.toFixed(1)}%`);
+        if (!train.다음역 || !train.경로.includes(train.다음역)) {
+        console.warn(`🚨 ${train.현위치역} → 다음역 없음 또는 경로 불일치`);
+        return; // 열차 아이콘 표시 안 함
+}
+
 
         document.querySelectorAll(".station").forEach(stationEl => {
           const nameEl = stationEl.querySelector(".station-name");
