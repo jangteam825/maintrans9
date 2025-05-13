@@ -97,7 +97,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const nameEl = stationEl.querySelector(".station-name");
   if (nameEl && nameEl.textContent.trim() === train.현위치역.trim()) {
     const icon = document.createElement("img");
-    icon.src = "assets/train_icon.png";
+    icon.src = "https://jangteam825.github.io/maintrans9/assets/train_icon.png";
     icon.alt = "열차";
     icon.className = "train-icon";
     icon.style.width = "20px";
