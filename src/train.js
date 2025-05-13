@@ -93,22 +93,24 @@ window.addEventListener("DOMContentLoaded", () => {
         console.log(`📍 ${train.현위치역}→${train.다음역} 진행률: ${pct.toFixed(1)}%`);
 
         // 노선도에서 .station-name과 매칭해서 train_icon 표시
-        document.querySelectorAll(".station").forEach(stationEl => {
-          const nameEl = stationEl.querySelector(".station-name");
-          if (nameEl && nameEl.textContent.trim() === train.현위치역.trim()) {
-            if (!stationEl.querySelector(".train-icon")) {
-              const icon = document.createElement("img");
-              icon.src = "assets/train_icon.png";
-              icon.alt = "열차";
-              icon.className = "train-icon";
-              icon.style.width = "20px";
-              icon.style.marginLeft = "4px";
-              icon.style.verticalAlign = "middle";
-              stationEl.appendChild(icon);
-            }
-          }
-        });
-      });
+   document.querySelectorAll(".station").forEach(stationEl => {
+  const nameEl = stationEl.querySelector(".station-name");
+  if (nameEl && nameEl.textContent.trim() === train.현위치역.trim()) {
+    const icon = document.createElement("img");
+    icon.src = "assets/train_icon.png";
+    icon.alt = "열차";
+    icon.className = "train-icon";
+    icon.style.width = "20px";
+    icon.style.position = "absolute";
+    icon.style.top = "-24px"; // 점 위로 띄우기
+    icon.style.left = "50%";
+    icon.style.transform = "translateX(-50%)";
+
+    const dot = stationEl.querySelector(".station-dot") || stationEl;
+    dot.appendChild(icon);
+  }
+});
+
 
     } catch (err) {
       console.error(`❌ 업로드 실패:`, err);
