@@ -121,7 +121,7 @@ window.addEventListener("DOMContentLoaded", () => {
       let trains = [];
       try {
         trains = JSON.parse(rawText);
-        window.trains = trains; // 🔥 콘솔에서 보기 위해 추가
+        window.trains = trains;
       } catch (err) {
         console.error("❌ JSON 파싱 실패", err);
         status.textContent = "서버 응답 오류 (JSON 파싱 실패)";
@@ -136,15 +136,14 @@ window.addEventListener("DOMContentLoaded", () => {
 
       trains.forEach(train => {
         const segmentMap = getSegmentMap(train);
-        if (Object.keys(segmentMap).length === 0) return; // 회송 제외
+        if (Object.keys(segmentMap).length === 0) return;
 
         const pct = getProgressByRoute(train, segmentMap);
         console.log(`📍 ${train.현위치역}→${train.다음역} (${train.열번}) 진행률: ${pct.toFixed(1)}%`);
         if (!train.다음역 || !train.경로.includes(train.다음역)) {
-        console.warn(`🚨 ${train.현위치역} → 다음역 없음 또는 경로 불일치`);
-        return; // 열차 아이콘 표시 안 함
-}
-
+          console.warn(`🚨 ${train.현위치역} → 다음역 없음 또는 경로 불일치`);
+          return;
+        }
 
         document.querySelectorAll(".station").forEach(stationEl => {
           const nameEl = stationEl.querySelector(".station-name");
@@ -158,7 +157,21 @@ window.addEventListener("DOMContentLoaded", () => {
             icon.style.top = "-24px";
             icon.style.left = "50%";
             icon.style.transform = "translateX(-50%)";
-            (stationEl.querySelector(".station-dot") || stationEl).appendChild(icon);
+
+            const wrapper = document.createElement("div");
+            wrapper.style.position = "relative";
+            wrapper.style.textAlign = "center";
+
+            const label = document.createElement("div");
+            label.textContent = `${train.열번} (${train.편성}편성)`;
+            label.style.fontSize = "10px";
+            label.style.color = "black";
+            label.style.marginTop = "-5px";
+
+            wrapper.appendChild(icon);
+            wrapper.appendChild(label);
+
+            (stationEl.querySelector(".station-dot") || stationEl).appendChild(wrapper);
           }
         });
       });
