@@ -116,6 +116,7 @@ window.addEventListener("DOMContentLoaded", () => {
       });
 
       const rawText = await res.text();
+      window.trains = trains; // 🔥 콘솔에서 보기 위해 추가
       if (!res.ok) throw new Error(res.status);
 
       let trains = [];
