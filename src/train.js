@@ -116,12 +116,12 @@ window.addEventListener("DOMContentLoaded", () => {
       });
 
       const rawText = await res.text();
-      window.trains = trains; // 🔥 콘솔에서 보기 위해 추가
       if (!res.ok) throw new Error(res.status);
 
       let trains = [];
       try {
         trains = JSON.parse(rawText);
+        window.trains = trains; // 🔥 콘솔에서 보기 위해 추가
       } catch (err) {
         console.error("❌ JSON 파싱 실패", err);
         status.textContent = "서버 응답 오류 (JSON 파싱 실패)";
