@@ -22,26 +22,17 @@
     .station-dot { width:15px; height:15px; background:#FFC300; border-radius:50%; border:1px solid #666; z-index:2; }
     .station-name { margin-top:10px; font-size:13px; color:#444; text-align:center; }
     .station-time { margin-top:6px; font-size:10px; color:#555; height:14px; text-align:center; }
-    .train-icon {
-      position: absolute;
-      top: -24px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 20px;
-      z-index: 10;
-    }
+    .train-icon { position:absolute; top:-24px; left:50%; transform:translateX(-50%); width:20px; z-index:10; }
   </style>
 </head>
 <body>
-  <input type="file" id="excelUpload" style="margin-bottom:10px;">
+  <input type="file" id="excelUpload" style="margin-bottom:10px;" />
   <p id="uploadStatus"></p>
-
   <div class="lines-wrapper">
     <div class="legend">
       <div class="legend-item"><div class="legend-line" style="background:#FF3B30;"></div>급행</div>
       <div class="legend-item"><div class="legend-line" style="background:#FFCC00;"></div>일반</div>
     </div>
-
     <!-- 상선 ▶️ -->
     <div class="line-section">
       <div class="line-title">상선 ▶️</div>
@@ -49,8 +40,6 @@
         <div class="express-line"></div>
         <div class="base-line"></div>
         <div class="normal-line"></div>
-        
-        <!-- 역 목록: station-point -> station-dot로 교체 -->
         <div class="station"><div class="station-dot"></div><div class="station-name">개화</div><div class="station-time"></div></div>
         <div class="station"><div class="station-dot"></div><div class="station-name">김포공항</div><div class="station-time"></div></div>
         <div class="station"><div class="station-dot"></div><div class="station-name">공항시장</div><div class="station-time"></div></div>
@@ -91,7 +80,6 @@
         <div class="station"><div class="station-dot"></div><div class="station-name">중앙보훈병원</div><div class="station-time"></div></div>
       </div>
     </div>
-
     <!-- 하선 ▶️ -->
     <div class="line-section">
       <div class="line-title">하선 ▶️</div>
@@ -99,7 +87,6 @@
         <div class="express-line"></div>
         <div class="base-line"></div>
         <div class="normal-line"></div>
-
         <div class="station"><div class="station-dot"></div><div class="station-name">중앙보훈병원</div><div class="station-time"></div></div>
         <div class="station"><div class="station-dot"></div><div class="station-name">둔촌오륜</div><div class="station-time"></div></div>
         <div class="station"><div class="station-dot"></div><div class="station-name">올림픽공원</div><div class="station-time"></div></div>
@@ -123,26 +110,24 @@
         <div class="station"><div class="station-dot"></div><div class="station-name">노들</div><div class="station-time"></div></div>
         <div class="station"><div class="station-dot"></div><div class="station-name">노량진</div><div class="station-time"></div></div>
         <div class="station"><div class="station-dot"></div><div class="station-name">샛강</div><div class="station-time"></div></div>
-        <div class="station"><div class="station-dot"></div><div class="station-name">여의도</div><div class="station-time"></div></div>
-        <div class="station"><div class="station-dot"></div><div class="station-name">국회의사당</div><div class="station-time"></div></div>
-        <div class="station"><div class="station-dot"></div><div class="station-name">당산</div><div class="station-time"></div></div>
-        <div class="station"><div class="station-dot"></div><div class="station-name">선유도</div><div class="station-time"></div></div>
-        <div class="station"><div class="station-dot"></div><div class="station-name">신목동</div><div class="station-time"></div></div>
-        <div class="station"><div class="station-dot"></div><div class="station-name">염창</div><div class="station-time"></div></div>
-        <div class="station"><div class="station-dot"></div><div class="station-name">등촌</div><div class="station-time"></div></div>
-        <div class="station"><div class="station-dot"></div><div class="station-name">증미</div><div class="station-time"></div></div>
-        <div class="station"><div class="station-dot"></div><div class="station-name">가양</div><div class="station-time"></div></div>
-        <div class="station"><div class="station-dot"></div><div class="station-name">양천향교</div><div class="station-time"></div></div>
-        <div class="station"><div class="station-dot"></div><div class="station-name">마곡나루</div><div class="station-time"></div></div>
-        <div class="station"><div class="station-dot"></div><div class="station-name">신방화</div><div class="station-time"></div></div>
-        <div class="station"><div class="station-dot"></div><div class="station-name">공항시장</div><div class="station-time"></div></div>
-        <div class="station"><div class="station-dot"></div><div class="station-name">김포공항</div><div class="station-time"></div></div>
-        <div class="station"><div class="station-dot"></div><div class="station-name">개화</div><div class="station-time"></div></div>
+        <div class="station"><divaclass="station-dot"></div><div class="station-name">여의도</div><div class="station-time"></div></div>
+        <div class="station"><divaclass="station-dot"></div><div class="station-name">국회의사당</div><div class="station-time"></div></div>
+        <div class="station"><divaclass="station-dot"></div><div class="station-name">당산</div><div class="station-time"></div></div>
+        <div class="station"><divaclass="station-dot"></div><div class="station-name">선유도</div><div class="station-time"></div></div>
+        <div class="station"><divaclass="station-dot"></div><div class="station-name">신목동</div><div class="station-time"></div></div>
+        <div class="station"><divaclass="station-dot"></div><div class="station-name">염창</div><div class="station-time"></div></div>
+        <div class="station"><divaclass="station-dot"></div><div class="station-name">등촌</div><div class="station-time"></div></div>
+        <div class="station"><divaclass="station-dot"></div><div class="station-name">증미</div><div class="station-time"></div></div>
+        <div class="station"><divaclass="station-dot"></div><div class="station-name">가양</div><div class="station-time"></div></div>
+        <div class="station"><divaclass="station-dot"></div><div class="station-name">양천향교</div><div class="station-time"></div></div>
+        <div class="station"><divaclass="station-dot"></div><div class="station-name">마곡나루</div><div class="station-time"></div></div>
+        <div class="station"><divaclass="station-dot"></div><div class="station-name">신방화</div><div class="station-time"></div></div>
+        <div class="station"><divaclass="station-dot"></div><div class="station-name">공항시장</div><div class="station-time"></div></div>
+        <div class="station"><divaclass="station-dot"></div><div class="station-name">김포공항</div><div class="station-time"></div></div>
+        <div class="station"><divaclass="station-dot"></div><div class="station-name">개화</div><div class="station-time"></div></div>
       </div>
     </div>
   </div>
-
-  <!-- 수정된 train.js 경로 -->
   <script src="https://jangteam825.github.io/maintrans9/train.js"></script>
 </body>
 </html>
