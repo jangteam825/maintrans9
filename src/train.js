@@ -62,28 +62,29 @@ const segmentTimesExpress = {
 function getSegmentMap(train) {
   const prefix = train.열번?.[0];
   if (prefix === "E") return segmentTimesExpress;
-  if (prefix === "H") return {}; // 회송은 무시
+  if (prefix === "H") return {};
   return segmentTimes;
 }
 
 // ─── 경로 기반 열차 진행률 계산 ───
 function getProgressByRoute(train, segmentMap) {
-  let total = 0, progressed = 0;
-  let reachedCurrent = false;
   const { 경로: route, 현위치역: current, 다음역: next, 다음까지남은시간: timeLeft } = train;
+  let total = 0, progressed = 0, reachedCurrent = false;
 
   for (let i = 0; i < route.length - 1; i++) {
     const key = `${route[i]}→${route[i+1]}`;
     const segTime = segmentMap[key] || 2;
     total += segTime;
-    if (route[i] === current && route[i+1] === next) {
-      progressed += segTime - timeLeft;
-      reachedCurrent = true;
-    } else if (!reachedCurrent) {
-      progressed += segTime;
+    if (!reachedCurrent) {
+      if (route[i] === current && route[i+1] === next) {
+        progressed += segTime - timeLeft;
+        reachedCurrent = true;
+      } else {
+        progressed += segTime;
+      }
     }
   }
-  return Math.round(Math.min(100, Math.max(0, (progressed / total) * 100)) * 10) / 10;
+  return Math.round((Math.max(0, Math.min(100, (progressed / total) * 100))) * 10) / 10;
 }
 
 // ─── 메인 실행 로직 ───
@@ -101,11 +102,11 @@ window.addEventListener("DOMContentLoaded", () => {
     status.style.color = "green";
 
     const form = new FormData();
-    form.append('file', file);
+    form.append("file", file);
     console.log('[DEBUG] Fetch 호출:', API_URL);
 
     try {
-      const res = await fetch(API_URL, { method: 'POST', body: form, mode: 'cors' });
+      const res = await fetch(API_URL, { method: "POST", body: form, mode: "cors" });
       console.log('[DEBUG] Fetch 응답 상태:', res.status);
       const text = await res.text();
       let trains = [];
@@ -119,20 +120,20 @@ window.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      status.textContent = '업로드 및 분석 성공';
-      status.style.color = 'blue';
+      status.textContent = "업로드 및 분석 성공";
+      status.style.color = "blue";
 
-      // 기존 아이콘 제거
-      document.querySelectorAll('.station .train-icon').forEach(i => i.remove());
+      document.querySelectorAll('.station .train-icon').forEach(icon => icon.remove());
 
       trains.forEach(train => {
         // '역' 접미사 제거
-        const strip = s => s?.replace(/역$/, '') || '';
+        const strip = s => s?.replace(/역$/, "") || "";
         train.경로 = train.경로.map(strip);
         train.현위치역 = strip(train.현위치역);
         train.다음역 = strip(train.다음역);
 
         const segmentMap = getSegmentMap(train);
+        if (!Object.keys(segmentMap).length) return;
         const pct = getProgressByRoute(train, segmentMap);
         console.log(`📍 ${train.현위치역}→${train.다음역} (${train.열번}) 진행률: ${pct}%`);
 
@@ -141,13 +142,22 @@ window.addEventListener("DOMContentLoaded", () => {
           if (nameEl?.textContent.trim() === train.현위치역) {
             const icon = document.createElement('img');
             icon.src = 'https://jangteam825.github.io/maintrans9/assets/train_icon.png';
+            icon.alt = '열차';
             icon.className = 'train-icon';
+            icon.style.position = 'absolute';
+            icon.style.top = '-24px';
+            icon.style.left = '50%';
+            icon.style.transform = 'translateX(-50%)';
+
             const wrapper = document.createElement('div');
             wrapper.style.position = 'relative';
             wrapper.style.textAlign = 'center';
             const label = document.createElement('div');
             label.textContent = `${train.열번} (${train.편성}편성)`;
             label.style.fontSize = '10px';
+            label.style.color = 'black';
+            label.style.marginTop = '-5px';
+
             wrapper.append(icon, label);
             stationEl.querySelector('.station-dot').appendChild(wrapper);
           }
@@ -160,4 +170,3 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
-
