@@ -108,12 +108,13 @@ window.addEventListener("DOMContentLoaded", () => {
     const form = new FormData();
     form.append("file", file);
 
-    try {
-      const res = await fetch("https://maintrans9-upload-6e3ba659a8bc.herokuapp.com/api/process", {
-        method: "POST",
-        body: form,
-        mode: "cors"
-      });
+ try {
+  const res = await fetch("https://maintrans9-upload.herokuapp.com/api/process", {
+    method: "POST",
+    body: form,
+    mode: "cors"
+  });
+
 
       const rawText = await res.text();
       if (!res.ok) throw new Error(res.status);
