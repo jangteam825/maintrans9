@@ -108,34 +108,32 @@ window.addEventListener("DOMContentLoaded", () => {
     const form = new FormData();
     form.append("file", file);
 
- try {
-const res = await fetch("https://maintrans9-fix-3dfc4c86991d.herokuapp.com/api/process", {
-  method: "POST",
-  body: form,
-  mode: "cors"
-});
-
+    try {
+      const res = await fetch("https://maintrans9-fix-3dfc4c86991d.herokuapp.com/api/process", {
+        method: "POST",
+        body: form,
+        mode: "cors"
+      });
 
       const rawText = await res.text();
       if (!res.ok) throw new Error(res.status);
 
-      let trains = [];
-      try {
-        trains = JSON.parse(rawText);
-        window.trains = trains;
-      } catch (err) {
-        console.error("❌ JSON 파싱 실패", err);
-        status.textContent = "서버 응답 오류 (JSON 파싱 실패)";
-        status.style.color = "red";
-        return;
-      }
+      let trains = JSON.parse(rawText);
+      window.trains = trains;
 
       status.textContent = "업로드 및 분석 성공";
       status.style.color = "blue";
 
+      // 기존 아이콘 제거
       document.querySelectorAll(".station .train-icon").forEach(icon => icon.remove());
 
       trains.forEach(train => {
+        // '역' 접미사 제거
+        const strip = s => s?.replace(/역$/, "") || "";
+        train.경로 = train.경로.map(strip);
+        train.현위치역 = strip(train.현위치역);
+        train.다음역 = strip(train.다음역);
+
         const segmentMap = getSegmentMap(train);
         if (Object.keys(segmentMap).length === 0) return;
 
@@ -153,11 +151,6 @@ const res = await fetch("https://maintrans9-fix-3dfc4c86991d.herokuapp.com/api/p
             icon.src = "https://jangteam825.github.io/maintrans9/assets/train_icon.png";
             icon.alt = "열차";
             icon.className = "train-icon";
-            icon.style.width = "20px";
-            icon.style.position = "absolute";
-            icon.style.top = "-24px";
-            icon.style.left = "50%";
-            icon.style.transform = "translateX(-50%)";
 
             const wrapper = document.createElement("div");
             wrapper.style.position = "relative";
@@ -172,7 +165,8 @@ const res = await fetch("https://maintrans9-fix-3dfc4c86991d.herokuapp.com/api/p
             wrapper.appendChild(icon);
             wrapper.appendChild(label);
 
-            (stationEl.querySelector(".station-dot") || stationEl).appendChild(wrapper);
+            const dot = stationEl.querySelector(".station-dot") || stationEl;
+            dot.appendChild(wrapper);
           }
         });
       });
