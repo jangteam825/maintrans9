@@ -145,9 +145,16 @@ window.addEventListener("DOMContentLoaded", () => {
             icon.alt = '열차';
             icon.className = 'train-icon';
             icon.style.position = 'absolute';
-            icon.style.top = '-24px';
             icon.style.left = '50%';
             icon.style.transform = 'translateX(-50%)';
+
+            // ★ 여기서 급행/일반 분기
+            const prefix = train.열번?.[0];
+            if (prefix === 'E') {      // 급행은 더 위
+              icon.style.top = '-56px';
+            } else {                  // 일반 등은 기존 위치
+              icon.style.top = '-24px';
+            }
 
             const wrapper = document.createElement('div');
             wrapper.style.position = 'relative';
