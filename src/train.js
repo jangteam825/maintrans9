@@ -125,51 +125,58 @@ window.addEventListener("DOMContentLoaded", () => {
 
       document.querySelectorAll('.station .train-icon').forEach(icon => icon.remove());
 
-      trains.forEach(train => {
-        // '역' 접미사 제거
-        const strip = s => s?.replace(/역$/, "") || "";
-        train.경로 = train.경로.map(strip);
-        train.현위치역 = strip(train.현위치역);
-        train.다음역 = strip(train.다음역);
+  trains.forEach(train => {
+  // '역' 접미사 제거
+  const strip = s => s?.replace(/역$/, "") || "";
+  train.경로 = train.경로.map(strip);
+  train.현위치역 = strip(train.현위치역);
+  train.다음역 = strip(train.다음역);
 
-        const segmentMap = getSegmentMap(train);
-        if (!Object.keys(segmentMap).length) return;
-        const pct = getProgressByRoute(train, segmentMap);
-        console.log(`📍 ${train.현위치역}→${train.다음역} (${train.열번}) 진행률: ${pct}%`);
+  const segmentMap = getSegmentMap(train);
+  if (!Object.keys(segmentMap).length) return;
 
-        document.querySelectorAll('.station').forEach(stationEl => {
-          const nameEl = stationEl.querySelector('.station-name');
-          if (nameEl?.textContent.trim() === train.현위치역) {
-            const icon = document.createElement('img');
-            icon.src = 'https://jangteam825.github.io/maintrans9/assets/train_icon.png';
-            icon.alt = '열차';
-            icon.className = 'train-icon';
-            icon.style.position = 'absolute';
-            icon.style.left = '50%';
-            icon.style.transform = 'translateX(-50%)';
+  document.querySelectorAll('.station').forEach(stationEl => {
+    const nameEl = stationEl.querySelector('.station-name');
+    if (nameEl?.textContent.trim() === train.현위치역) {
+      // x좌표 계산
+      const stationDot = stationEl.querySelector('.station-dot');
+      const stationRect = stationDot.getBoundingClientRect();
+      const containerRect = stationEl.parentNode.getBoundingClientRect();
+      const left = stationRect.left - containerRect.left + (stationRect.width/2) - 10;
 
-            // ★ 여기서 급행/일반 분기
-            const prefix = train.열번?.[0];
-            if (prefix === 'E') {      // 급행은 더 위
-              icon.style.top = '-56px';
-            } else {                  // 일반 등은 기존 위치
-              icon.style.top = '-24px';
-            }
+      // .line-container 기준으로 append
+      const lineContainer = stationEl.parentNode; // .line-container
+      const icon = document.createElement('img');
+      icon.src = 'https://jangteam825.github.io/maintrans9/assets/train_icon.png';
+      icon.alt = '열차';
+      icon.className = 'train-icon';
+      icon.style.position = 'absolute';
+      icon.style.left = `${left}px`;
 
-            const wrapper = document.createElement('div');
-            wrapper.style.position = 'relative';
-            wrapper.style.textAlign = 'center';
-            const label = document.createElement('div');
-            label.textContent = `${train.열번} (${train.편성}편성)`;
-            label.style.fontSize = '10px';
-            label.style.color = 'black';
-            label.style.marginTop = '-5px';
+      // 급행/일반 라인에 맞게 y값 조정
+      const prefix = train.열번?.[0];
+      if (prefix === 'E') { // 급행(빨간라인)
+        icon.style.top = '-48px';
+      } else { // 일반(노란라인)
+        icon.style.top = '38px';
+      }
 
-            wrapper.append(icon, label);
-            stationEl.querySelector('.station-dot').appendChild(wrapper);
-          }
-        });
-      });
+      lineContainer.appendChild(icon);
+
+      // 라벨 (번호)도 같이 띄우고 싶으면 아래처럼
+      const label = document.createElement('div');
+      label.textContent = `${train.열번} (${train.편성}편성)`;
+      label.style.position = 'absolute';
+      label.style.left = `${left}px`;
+      label.style.fontSize = '10px';
+      label.style.color = 'black';
+      label.style.top = prefix === 'E' ? '-35px' : '60px'; // 라벨도 라인 따라 조정
+
+      lineContainer.appendChild(label);
+    }
+  });
+});
+
     } catch (err) {
       console.error('[ERROR] 업로드 실패:', err);
       status.textContent = '업로드 실패: ' + err.message;
