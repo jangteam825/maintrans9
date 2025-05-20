@@ -111,14 +111,20 @@ window.addEventListener('DOMContentLoaded', () => {
       const text = await res.text();
       let trains = [];
       try {
-        trains = JSON.parse(text);
-        console.log('[DEBUG] 파싱된 열차 데이터:', trains);
-      } catch (err) {
-        console.error('[ERROR] JSON 파싱 실패', err);
-        status.textContent = '서버 응답 오류 (JSON 파싱 실패)';
-        status.style.color = 'red';
-        return;
-      }
+  try {
+  trains = JSON.parse(text);
+  console.log('[DEBUG] 파싱된 열차 데이터:', trains);
+
+  if (!Array.isArray(trains)) {
+    throw new Error('서버에서 배열이 아닌 데이터를 반환함');
+  }
+} catch (err) {
+  console.error('[ERROR] JSON 파싱 실패', err);
+  status.textContent = '서버 응답 오류 (데이터 오류 또는 JSON 파싱 실패)';
+  status.style.color = 'red';
+  return;
+}
+
 
       status.textContent = '업로드 및 분석 성공';
       status.style.color = 'blue';
