@@ -58,8 +58,7 @@ const segmentTimesExpress = {
   "올림픽공원역→중앙보훈병원": 4
 };
 
-// 
-─── 열차 종류에 따른 소요시간 테이블 선택 ───
+// ─── 열차 종류에 따른 소요시간 테이블 선택 ───
 function getSegmentMap(train) {
   const prefix = train.열번?.[0];
   if (prefix === 'E') return segmentTimesExpress;
