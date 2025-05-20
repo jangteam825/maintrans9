@@ -89,8 +89,8 @@ function getProgressByRoute(train, segmentMap) {
 
 // ─── 메인 실행 로직 ───
 window.addEventListener("DOMContentLoaded", () => {
-  const upload = document.getElementById("excelUpload");
-  const status = document.getElementById("uploadStatus");
+  const upload  = document.getElementById("excelUpload");
+  const status  = document.getElementById("uploadStatus");
   const API_URL = "https://maintrans9-fix-3dfc4c86991d.herokuapp.com/api/process";
 
   upload.addEventListener("change", async (e) => {
@@ -108,74 +108,64 @@ window.addEventListener("DOMContentLoaded", () => {
     try {
       const res = await fetch(API_URL, { method: "POST", body: form, mode: "cors" });
       console.log('[DEBUG] Fetch 응답 상태:', res.status);
-      const text = await res.text();
-      let trains = [];
-      try {
-        trains = JSON.parse(text);
-        console.log('[DEBUG] 파싱된 열차 데이터:', trains);
-      } catch (err) {
-        console.error('[ERROR] JSON 파싱 실패', err);
-        status.textContent = '서버 응답 오류 (JSON 파싱 실패)';
-        status.style.color = 'red';
+
+      const data = await res.json();
+      console.log('▶ 서버 응답:', data);
+
+      // HTTP 에러 처리
+      if (!res.ok) {
+        status.textContent = `업로드 실패: ${data.error || res.statusText}`;
+        status.style.color = "red";
         return;
       }
 
-      status.textContent = "업로드 및 분석 성공";
-      status.style.color = "blue";
-
-      document.querySelectorAll('.station .train-icon').forEach(icon => icon.remove());
-
-  trains.forEach(train => {
-  // '역' 접미사 제거
-  const strip = s => s?.replace(/역$/, "") || "";
-  train.경로 = train.경로.map(strip);
-  train.현위치역 = strip(train.현위치역);
-  train.다음역 = strip(train.다음역);
-
-  const segmentMap = getSegmentMap(train);
-  if (!Object.keys(segmentMap).length) return;
-
-  document.querySelectorAll('.station').forEach(stationEl => {
-    const nameEl = stationEl.querySelector('.station-name');
-    if (nameEl?.textContent.trim() === train.현위치역) {
-      // x좌표 계산
-      const stationDot = stationEl.querySelector('.station-dot');
-      const stationRect = stationDot.getBoundingClientRect();
-      const containerRect = stationEl.parentNode.getBoundingClientRect();
-      const left = stationRect.left - containerRect.left + (stationRect.width/2) - 10;
-
-      // .line-container 기준으로 append
-      const lineContainer = stationEl.parentNode; // .line-container
-      const icon = document.createElement('img');
-      icon.src = 'https://jangteam825.github.io/maintrans9/assets/train_icon.png';
-      icon.alt = '열차';
-      icon.className = 'train-icon';
-      icon.style.position = 'absolute';
-      icon.style.left = `${left}px`;
-
-      // 급행/일반 라인에 맞게 y값 조정
-      const prefix = train.열번?.[0];
-      if (prefix === 'E') { // 급행(빨간라인)
-        icon.style.top = '-48px';
-      } else { // 일반(노란라인)
-        icon.style.top = '38px';
+      // 배열 여부 체크
+      if (!Array.isArray(data)) {
+        status.textContent = "업로드 실패: 잘못된 데이터 형식";
+        status.style.color = "red";
+        console.error('잘못된 응답 포맷:', data);
+        return;
       }
 
-      lineContainer.appendChild(icon);
+      // 기존 아이콘 제거
+      document.querySelectorAll('.station .train-icon').forEach(icon => icon.remove());
 
-      // 라벨 (번호)도 같이 띄우고 싶으면 아래처럼
-      const label = document.createElement('div');
-      label.textContent = `${train.열번} (${train.편성}편성)`;
-      label.style.position = 'absolute';
-      label.style.left = `${left}px`;
-      label.style.fontSize = '10px';
-      label.style.color = 'black';
-      label.style.top = prefix === 'E' ? '-35px' : '60px'; // 라벨도 라인 따라 조정
+      // 데이터가 배열이므로 안전하게 forEach
+      data.forEach(train => {
+        const segmentMap = getSegmentMap(train);
+        if (!Object.keys(segmentMap).length) return;
 
-      lineContainer.appendChild(label);
-    }
-  });
-});
+        document.querySelectorAll('.station').forEach(stationEl => {
+          const nameEl = stationEl.querySelector('.station-name');
+          if (nameEl?.textContent.trim() === train.현위치역) {
+            const stationDot = stationEl.querySelector('.station-dot');
+            const stationRect = stationDot.getBoundingClientRect();
+            const containerRect = stationEl.parentNode.getBoundingClientRect();
+            const left = stationRect.left - containerRect.left + stationRect.width / 2 - 10;
+
+            const icon = document.createElement('img');
+            icon.src = 'https://jangteam825.github.io/maintrans9/assets/train_icon.png';
+            icon.alt = '열차';
+            icon.className = 'train-icon';
+            icon.style.position = 'absolute';
+            icon.style.left = `${left}px`;
+            icon.style.top = train.열번[0] === 'E' ? '-48px' : '38px';
+            stationEl.parentNode.appendChild(icon);
+
+            const label = document.createElement('div');
+            label.textContent = `${train.열번} (${train.편성}편성)`;
+            label.style.position = 'absolute';
+            label.style.left = `${left}px`;
+            label.style.fontSize = '10px';
+            label.style.color = 'black';
+            label.style.top = train.열번[0] === 'E' ? '-35px' : '60px';
+            stationEl.parentNode.appendChild(label);
+          }
+        });
+      });
+
+      status.textContent = "업로드 및 분석 성공";
+      status.style.color = "blue";
 
     } catch (err) {
       console.error('[ERROR] 업로드 실패:', err);
