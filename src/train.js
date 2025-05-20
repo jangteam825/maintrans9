@@ -94,36 +94,29 @@ window.addEventListener('DOMContentLoaded', () => {
   const API_URL = 'https://maintrans9-fix-3dfc4c86991d.herokuapp.com/api/process';
 
   upload.addEventListener('change', async (e) => {
-    const file = e.target.files[0];
-    console.log('[DEBUG] 파일 선택됨:', file?.name);
-    if (!file) return;
+  const file = e.target.files[0];
+  console.log('[DEBUG] 파일 선택됨:', file?.name);
+  if (!file) return;
 
-    status.textContent = '업로드 중…';
-    status.style.color = 'green';
+  status.textContent = '업로드 중…';
+  status.style.color = 'green';
 
-    const form = new FormData();
-    form.append('file', file);
-    console.log('[DEBUG] Fetch 호출:', API_URL);
+  const form = new FormData();
+  form.append('file', file);
+  console.log('[DEBUG] Fetch 호출:', API_URL);
+
+  try {
+    const res = await fetch(API_URL, { method: 'POST', body: form, mode: 'cors' });
+    console.log('[DEBUG] Fetch 응답 상태:', res.status);
+    const text = await res.text();
+    let trains = [];
 
     try {
-      const res = await fetch(API_URL, { method: 'POST', body: form, mode: 'cors' });
-      console.log('[DEBUG] Fetch 응답 상태:', res.status);
-      const text = await res.text();
-      let trains = [];
-      try {
-  try {
-  trains = JSON.parse(text);
-  console.log('[DEBUG] 파싱된 열차 데이터:', trains);
-  if (!Array.isArray(trains)) {
-    throw new Error('서버에서 배열이 아닌 데이터를 반환함');
-  }
-} catch (err) {
-  console.error('[ERROR] JSON 파싱 실패', err);
-  status.textContent = '서버 응답 오류 (데이터 오류 또는 JSON 파싱 실패)';
-  status.style.color = 'red';
-  return;
-}
-
+      trains = JSON.parse(text);
+      console.log('[DEBUG] 파싱된 열차 데이터:', trains);
+      if (!Array.isArray(trains)) {
+        throw new Error('서버에서 배열이 아닌 데이터를 반환함');
+      }
 
       status.textContent = '업로드 및 분석 성공';
       status.style.color = 'blue';
@@ -132,6 +125,7 @@ window.addEventListener('DOMContentLoaded', () => {
       document.querySelectorAll('.station .train-icon').forEach(icon => icon.remove());
 
       trains.forEach(train => {
+        // '역' 접미사 제거
         const strip = s => s?.replace(/역$/, '') || '';
         train.경로 = train.경로.map(strip);
         train.현위치역 = strip(train.현위치역);
@@ -148,8 +142,9 @@ window.addEventListener('DOMContentLoaded', () => {
             const stationDot = stationEl.querySelector('.station-dot');
             const stationRect = stationDot.getBoundingClientRect();
             const containerRect = stationEl.parentNode.getBoundingClientRect();
-            const left = stationRect.left - containerRect.left + (stationRect.width/2) - 10;
+            const left = stationRect.left - containerRect.left + (stationRect.width / 2) - 10;
 
+            // 기차 아이콘
             const icon = document.createElement('img');
             icon.src = 'https://jangteam825.github.io/maintrans9/assets/train_icon.png';
             icon.alt = '열차';
@@ -161,6 +156,7 @@ window.addEventListener('DOMContentLoaded', () => {
             icon.title = `${train.열번} (${train.편성}칸)\n출발: ${train.출발역} ${train.출발시각}\n도착: ${train.도착역} ${train.도착시각}`;
             stationEl.parentNode.appendChild(icon);
 
+            // 라벨
             const label = document.createElement('div');
             label.textContent = `${train.열번} (${train.편성}칸)`;
             label.style.position = 'absolute';
@@ -174,9 +170,15 @@ window.addEventListener('DOMContentLoaded', () => {
       });
 
     } catch (err) {
-      console.error('[ERROR] 업로드 실패:', err);
-      status.textContent = '업로드 실패: ' + err.message;
+      console.error('[ERROR] JSON 파싱 실패 또는 처리 중 오류:', err);
+      status.textContent = '서버 응답 오류 (데이터 오류 또는 JSON 파싱 실패)';
       status.style.color = 'red';
+      return;
     }
-  });
+
+  } catch (err) {
+    console.error('[ERROR] 업로드 실패:', err);
+    status.textContent = '업로드 실패: ' + err.message;
+    status.style.color = 'red';
+  }
 });
