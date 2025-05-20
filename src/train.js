@@ -128,13 +128,12 @@ window.addEventListener('DOMContentLoaded', () => {
       document.querySelectorAll('.station .train-icon').forEach(icon => icon.remove());
 
       trains.forEach(train => {
-        // '역' 접미사 제거
         const strip = s => s?.replace(/역$/, '') || '';
-        train.경로       = train.경로.map(strip);
-        train.현위치역  = strip(train.현위치역);
-        train.다음역    = strip(train.다음역);
-        train.출발역    = strip(train.출발역);
-        train.도착역    = strip(train.도착역);
+        train.경로 = train.경로.map(strip);
+        train.현위치역 = strip(train.현위치역);
+        train.다음역 = strip(train.다음역);
+        train.출발역 = strip(train.출발역);
+        train.도착역 = strip(train.도착역);
 
         const segmentMap = getSegmentMap(train);
         if (!Object.keys(segmentMap).length) return;
@@ -147,7 +146,6 @@ window.addEventListener('DOMContentLoaded', () => {
             const containerRect = stationEl.parentNode.getBoundingClientRect();
             const left = stationRect.left - containerRect.left + (stationRect.width/2) - 10;
 
-            // 기차 아이콘
             const icon = document.createElement('img');
             icon.src = 'https://jangteam825.github.io/maintrans9/assets/train_icon.png';
             icon.alt = '열차';
@@ -159,7 +157,6 @@ window.addEventListener('DOMContentLoaded', () => {
             icon.title = `${train.열번} (${train.편성}칸)\n출발: ${train.출발역} ${train.출발시각}\n도착: ${train.도착역} ${train.도착시각}`;
             stationEl.parentNode.appendChild(icon);
 
-            // 레이블
             const label = document.createElement('div');
             label.textContent = `${train.열번} (${train.편성}칸)`;
             label.style.position = 'absolute';
