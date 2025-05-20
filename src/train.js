@@ -61,8 +61,8 @@ const segmentTimesExpress = {
 // ─── 열차 종류에 따른 소요시간 테이블 선택 ───
 function getSegmentMap(train) {
   const prefix = train.열번?.[0];
-  if (prefix === "E") return segmentTimesExpress;
-  if (prefix === "H") return {};
+  if (prefix === 'E') return segmentTimesExpress;
+  if (prefix === 'H') return {};
   return segmentTimes;
 }
 
@@ -87,51 +87,53 @@ function getProgressByRoute(train, segmentMap) {
   return Math.round((Math.max(0, Math.min(100, (progressed / total) * 100))) * 10) / 10;
 }
 
-// ─── 메인 실행 로직 ───
-window.addEventListener("DOMContentLoaded", () => {
-  const upload  = document.getElementById("excelUpload");
-  const status  = document.getElementById("uploadStatus");
-  const API_URL = "https://maintrans9-fix-3dfc4c86991d.herokuapp.com/api/process";
+window.addEventListener('DOMContentLoaded', () => {
+  const upload = document.getElementById('excelUpload');
+  const status = document.getElementById('uploadStatus');
+  const API_URL = 'https://maintrans9-fix-3dfc4c86991d.herokuapp.com/api/process';
 
-  upload.addEventListener("change", async (e) => {
+  upload.addEventListener('change', async (e) => {
     const file = e.target.files[0];
     console.log('[DEBUG] 파일 선택됨:', file?.name);
     if (!file) return;
 
-    status.textContent = "업로드 중…";
-    status.style.color = "green";
+    status.textContent = '업로드 중…';
+    status.style.color = 'green';
 
     const form = new FormData();
-    form.append("file", file);
+    form.append('file', file);
     console.log('[DEBUG] Fetch 호출:', API_URL);
 
     try {
-      const res = await fetch(API_URL, { method: "POST", body: form, mode: "cors" });
+      const res = await fetch(API_URL, { method: 'POST', body: form, mode: 'cors' });
       console.log('[DEBUG] Fetch 응답 상태:', res.status);
-
-      const data = await res.json();
-      console.log('▶ 서버 응답:', data);
-
-      // HTTP 에러 처리
-      if (!res.ok) {
-        status.textContent = `업로드 실패: ${data.error || res.statusText}`;
-        status.style.color = "red";
+      const text = await res.text();
+      let trains = [];
+      try {
+        trains = JSON.parse(text);
+        console.log('[DEBUG] 파싱된 열차 데이터:', trains);
+      } catch (err) {
+        console.error('[ERROR] JSON 파싱 실패', err);
+        status.textContent = '서버 응답 오류 (JSON 파싱 실패)';
+        status.style.color = 'red';
         return;
       }
 
-      // 배열 여부 체크
-      if (!Array.isArray(data)) {
-        status.textContent = "업로드 실패: 잘못된 데이터 형식";
-        status.style.color = "red";
-        console.error('잘못된 응답 포맷:', data);
-        return;
-      }
+      status.textContent = '업로드 및 분석 성공';
+      status.style.color = 'blue';
 
       // 기존 아이콘 제거
       document.querySelectorAll('.station .train-icon').forEach(icon => icon.remove());
 
-      // 데이터가 배열이므로 안전하게 forEach
-      data.forEach(train => {
+      trains.forEach(train => {
+        // '역' 접미사 제거
+        const strip = s => s?.replace(/역$/, '') || '';
+        train.경로       = train.경로.map(strip);
+        train.현위치역  = strip(train.현위치역);
+        train.다음역    = strip(train.다음역);
+        train.출발역    = strip(train.출발역);
+        train.도착역    = strip(train.도착역);
+
         const segmentMap = getSegmentMap(train);
         if (!Object.keys(segmentMap).length) return;
 
@@ -141,31 +143,32 @@ window.addEventListener("DOMContentLoaded", () => {
             const stationDot = stationEl.querySelector('.station-dot');
             const stationRect = stationDot.getBoundingClientRect();
             const containerRect = stationEl.parentNode.getBoundingClientRect();
-            const left = stationRect.left - containerRect.left + stationRect.width / 2 - 10;
+            const left = stationRect.left - containerRect.left + (stationRect.width/2) - 10;
 
+            // 기차 아이콘
             const icon = document.createElement('img');
             icon.src = 'https://jangteam825.github.io/maintrans9/assets/train_icon.png';
             icon.alt = '열차';
             icon.className = 'train-icon';
             icon.style.position = 'absolute';
             icon.style.left = `${left}px`;
-            icon.style.top = train.열번[0] === 'E' ? '-48px' : '38px';
+            const prefix = train.열번?.[0];
+            icon.style.top = prefix === 'E' ? '-48px' : '38px';
+            icon.title = `${train.열번} (${train.편성}칸)\n출발: ${train.출발역} ${train.출발시각}\n도착: ${train.도착역} ${train.도착시각}`;
             stationEl.parentNode.appendChild(icon);
 
+            // 레이블
             const label = document.createElement('div');
-            label.textContent = `${train.열번} (${train.편성}편성)`;
+            label.textContent = `${train.열번} (${train.편성}칸)`;
             label.style.position = 'absolute';
             label.style.left = `${left}px`;
             label.style.fontSize = '10px';
             label.style.color = 'black';
-            label.style.top = train.열번[0] === 'E' ? '-35px' : '60px';
+            label.style.top = prefix === 'E' ? '-35px' : '60px';
             stationEl.parentNode.appendChild(label);
           }
         });
       });
-
-      status.textContent = "업로드 및 분석 성공";
-      status.style.color = "blue";
 
     } catch (err) {
       console.error('[ERROR] 업로드 실패:', err);
