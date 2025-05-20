@@ -114,7 +114,6 @@ window.addEventListener('DOMContentLoaded', () => {
   try {
   trains = JSON.parse(text);
   console.log('[DEBUG] 파싱된 열차 데이터:', trains);
-
   if (!Array.isArray(trains)) {
     throw new Error('서버에서 배열이 아닌 데이터를 반환함');
   }
