@@ -175,5 +175,6 @@ window.addEventListener('DOMContentLoaded', () => {
     console.error('[ERROR] 업로드 실패:', err);
     status.textContent = '업로드 실패: ' + err.message;
     status.style.color = 'red';
-  }
-});
+    }
+  });  // ← 이 줄 꼭 필요함!!!
+}); 
