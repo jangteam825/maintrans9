@@ -91,6 +91,8 @@ function getProgressByRoute(train, segmentMap) {
 window.addEventListener('DOMContentLoaded', () => {
   console.log("🔌 train.js 로드됨");
 
+  const API_URL = 'https://maintrans9-fix-3dfc4c86991d.herokuapp.com/api/process';
+  
   const upload = document.getElementById('excelUpload');
   const status = document.getElementById('uploadStatus');
   console.log("📂 파일 선택 리스너 바인딩 완료:", upload);
