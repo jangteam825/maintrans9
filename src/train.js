@@ -89,41 +89,44 @@ function getProgressByRoute(train, segmentMap) {
 
 
 window.addEventListener('DOMContentLoaded', () => {
+  console.log("🔌 train.js 로드됨");
+
   const upload = document.getElementById('excelUpload');
   const status = document.getElementById('uploadStatus');
-  const API_URL = 'https://maintrans9-fix-3dfc4c86991d.herokuapp.com/api/process';
+  console.log("📂 파일 선택 리스너 바인딩 완료:", upload);
 
   upload.addEventListener('change', async (e) => {
-  const file = e.target.files[0];
-  console.log('[DEBUG] 파일 선택됨:', file?.name);
-  if (!file) return;
+    const file = e.target.files[0];
+    console.log('[DEBUG] 파일 선택됨:', file?.name);
+    if (!file) return;
 
-  status.textContent = '업로드 중…';
-  status.style.color = 'green';
+    status.textContent = '업로드 중…'; status.style.color = 'green';
 
-  const form = new FormData();
-  form.append('file', file);
-  console.log('[DEBUG] Fetch 호출:', API_URL);
+    const form = new FormData();
+    form.append('file', file);
+    console.log('[DEBUG] Fetch 호출:', API_URL);
 
-  try {
-    const res = await fetch(API_URL, { method: 'POST', body: form, mode: 'cors' });
-    console.log('[DEBUG] Fetch 응답 상태:', res.status);
-    const text = await res.text();
-
-    let trains;
     try {
-      trains = JSON.parse(text);
-      console.log('[DEBUG] 파싱된 열차 데이터:', trains);
-      if (!Array.isArray(trains)) {
-        throw new Error('서버에서 배열이 아닌 데이터를 반환함');
-      }
-    } catch (err) {
-      console.error('[ERROR] JSON 파싱 실패 또는 처리 중 오류:', err);
-      status.textContent = '서버 응답 오류 (데이터 오류 또는 JSON 파싱 실패)';
-      status.style.color = 'red';
-      return;
-    }
+      const res = await fetch(API_URL, { method: 'POST', body: form, mode: 'cors' });
+      console.log('[DEBUG] Fetch 응답 상태:', res.status);
+      const rawText = await res.text();
+      console.log('[DEBUG] rawText:', rawText);
 
+      let trains;
+      try {
+        trains = JSON.parse(rawText);
+      } catch (parseErr) {
+        console.error('💥 JSON 파싱 에러:', parseErr);
+        status.textContent = '서버 응답 오류: JSON 파싱 실패';
+        status.style.color = 'red';
+        return;
+      }
+     if (!Array.isArray(trains)) {
+        console.error('💥 배열 아님:', trains);
+        status.textContent = `서버 에러: ${trains.error || JSON.stringify(trains)}`;
+        status.style.color = 'red';
+        return;
+      }
     status.textContent = '업로드 및 분석 성공';
     status.style.color = 'blue';
 
