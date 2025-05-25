@@ -141,31 +141,40 @@
     </div>
   </div>
   <script src="./src/train.js"></script>
-  <script>
-    document.getElementById('uploadBtn').addEventListener('click', async () => {
-      const diaFile = document.getElementById('diaUpload').files[0];
-      const routeFile = document.getElementById('routeUpload').files[0];
-      const statusEl = document.getElementById('uploadStatus');
-      if (!diaFile || !routeFile) {
-        statusEl.textContent = '두 엑셀 파일 모두 선택해주세요.';
-        statusEl.style.color = 'red';
-        return;
-      }
-      statusEl.textContent = '업로드 중…'; statusEl.style.color = 'black';
-      const formData = new FormData();
-      formData.append('diaFile', diaFile);
-      formData.append('routeFile', routeFile);
-      try {
-        const res = await fetch('https://maintrans9-upload-6e3ba659a8bc.herokuapp.com/api/process', { method: 'POST', body: formData });
-        if (!res.ok) throw new Error(res.statusText);
-        const trains = await res.json();
-        statusEl.textContent = '업로드 성공'; statusEl.style.color = 'green';
-        // train.js의 visualizeTrains 함수로 데이터 전달
-        visualizeTrains(trains);
-      } catch (err) {
-        statusEl.textContent = '업로드 실패: ' + err.message; statusEl.style.color = 'red';
-      }
-    });
-  </script>
+<script>
+  document.getElementById('uploadBtn').addEventListener('click', async () => {
+    const diaFile   = document.getElementById('diaUpload').files[0];
+    const routeFile = document.getElementById('routeUpload').files[0];
+    const statusEl  = document.getElementById('uploadStatus');
+    if (!diaFile || !routeFile) {
+      statusEl.textContent = '두 엑셀 파일 모두 선택해주세요.';
+      statusEl.style.color = 'red';
+      return;
+    }
+    statusEl.textContent = '업로드 중…'; 
+    statusEl.style.color = 'black';
+
+    // ← 여기 변수 이름을 formData로 통일
+    const formData = new FormData();
+    formData.append('diaFile', diaFile);
+    formData.append('routeFile', routeFile);
+
+    try {
+      const res = await fetch('https://maintrans9-upload-6e3ba659a8bc.herokuapp.com/api/process', {
+        method: 'POST',
+        body: formData    // ← formData 그대로 전달
+      });
+      if (!res.ok) throw new Error(res.statusText);
+      const trains = await res.json();
+      statusEl.textContent = '업로드 성공'; 
+      statusEl.style.color = 'green';
+      visualizeTrains(trains);
+    } catch (err) {
+      statusEl.textContent = '업로드 실패: ' + err.message;
+      statusEl.style.color = 'red';
+      console.error(err);
+    }
+  });
+</script>
 </body>
 </html>
