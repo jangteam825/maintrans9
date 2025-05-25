@@ -156,7 +156,7 @@
       formData.append('diaFile', diaFile);
       formData.append('routeFile', routeFile);
       try {
-        const res = await fetch('/api/process', { method: 'POST', body: formData });
+        const res = await fetch('https://maintrans9-upload-6e3ba659a8bc.herokuapp.com/api/process', { method: 'POST', body: formData });
         if (!res.ok) throw new Error(res.statusText);
         const trains = await res.json();
         statusEl.textContent = '업로드 성공'; statusEl.style.color = 'green';
