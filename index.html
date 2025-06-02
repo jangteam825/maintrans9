@@ -156,8 +156,9 @@
 
     // ← 여기 변수 이름을 formData로 통일
     const formData = new FormData();
-    formData.append('diaFile', diaFile);
-    formData.append('routeFile', routeFile);
+    formData.append('diafile', diaFile);     // 여기!
+    formData.append('routefile', routeFile); // 여기도!
+
 
     try {
       const res = await fetch(
