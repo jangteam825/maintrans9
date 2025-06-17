@@ -155,9 +155,10 @@
     statusEl.style.color = 'black';
 
     // ← 여기 변수 이름을 formData로 통일
-    const formData = new FormData();
-    formData.append('dia', diaFile);       // 기존 서버가 기대하는 이름
-    formData.append('vehicle', routeFile); // 차량행로표
+   const formData = new FormData();
+formData.append('diafile', diaFile);         // 수정됨
+formData.append('routefile', routeFile);     // 수정됨
+
 
 
     try {
